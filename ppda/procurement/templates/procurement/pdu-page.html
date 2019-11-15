@@ -1,0 +1,54 @@
+{% load staticfiles %}
+
+<html>
+	<head>
+			<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+			<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+	</head>
+	<body>
+		<div class="container col-12">
+		<div class="row fixed bg-info text-white" style="height:45;">
+			<div class="col-md-3 my-auto p-0">
+				<img class="h-100" src="{% static 'img/logo.png' %}" align="center" alt="PPDA logo" />
+			</div>
+			<div class="col-md-5 my-auto">
+				<strong>Office: Procurement and Disposal Unit</strong>
+			</div>
+			<div class="col-md-3 my-auto">
+				<strong>Username: {{ user.username }}</strong>
+			</div>
+			<div class="col-md-1 my-auto">
+				<a href="{% url 'logout' %}">Logout</a>
+			</div>
+		</div>
+
+		<div class="row" style="min-height:650">
+			<div class="col-md-2 bg-white h-100 p-0 fixed" style="top:45;">
+				<div class="pl-2 bg-dark text-white"><strong>DashBoard</strong></div>
+				<div class="list-group">
+					<a href="#" class="list-group-item list-group-item-action px-2" style="border-radius: 0px;">
+						Review and Preparation of Bidding Documents
+					</a>
+
+					<a href="#" class="list-group-item list-group-item-action px-2" style="border-radius: 0px;">
+						Adversting and Invitation of Bids
+					</a>
+
+					<a href="#" class="list-group-item list-group-item-action px-2" style="border-radius: 0px;">
+						Receipt and Opening of Bids
+					</a>
+					<a href="#" class="list-group-item list-group-item-action px-2" style="border-radius: 0px;">
+						Contract Management
+					</a>
+				</div>
+			</div>
+
+			<div class="col-md-10 bg-light h-100">
+				{% block content %}
+				{% endblock %}
+			</div>
+		</div>
+
+	</div>
+	</body>
+</html>

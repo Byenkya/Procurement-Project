@@ -1,0 +1,203 @@
+{% extends 'procurement/HOD-base.html' %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div align="center" class="col-md-4">
+			<div>Reference Number</div>
+			<div>P00001</div>
+		</div>
+
+		<div align="center" class="col-md-4">
+			<div>Financial Year</div>
+			<div>2019/2020</div>
+		</div>
+
+		<div align="center" class="col-md-4">
+			<div>Code of PDE</div>
+			<div>039</div>
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="card">
+		<div class="card-header p-2">
+			Type of Procurement
+		</div>
+
+		<div class="card-body p-2" align="center">
+			<div class="custom-control custom-radio custom-control-inline">
+				<input type="radio" id="proc-type-1" name="procurement-type" class="custom-control-input">
+				<label class="custom-control-label" for="proc-type-1">Supplies</label>
+			</div>
+
+			<div class="custom-control custom-radio custom-control-inline">
+				<input type="radio" id="proc-type-2" name="procurement-type" class="custom-control-input">
+				<label class="custom-control-label" for="proc-type-2">Works</label>
+			</div>
+
+			<div class="custom-control custom-radio custom-control-inline">
+				<input type="radio" id="proc-type-3" name="procurement-type" class="custom-control-input">
+				<label class="custom-control-label" for="proc-type-3">Services</label>
+			</div>
+		</div>
+	</div>
+
+	<br>
+	
+	<div class="card">
+		<div class="card-header p-2">
+			Type of Procurement
+		</div>
+
+		<div class="card-body p-2">
+			<div class="form-group">
+				<label class="form-check-label">Subject of Procurement</label>
+				<input class="form-control" type="text" name="subject">
+			</div>
+
+			<div class="form-group">
+				<label class="form-check-label">Procurement Plan Reference</label>
+				<input class="form-control" type="text" name="plan-reference">
+			</div>
+
+			<div class="form-group">
+				<label class="form-check-label">Location of Delivery</label>
+				<input class="form-control" type="text" name="location">
+			</div>
+
+			<div class="form-group">
+				<label class="form-check-label">Date Required</label>
+				<input class="form-control text-center" type="date" name="date-required">
+			</div>
+		</div>
+	</div>
+
+	<br>
+
+	<div class="card">
+		<div class="card-header p-2">
+			Details
+		</div>
+
+		<div class="card-body p-2">
+			<div class="row">
+				<div class="col-md-2 my-auto">Currency</div>
+				<div class="col-md-10">
+					<select class="form-control" name="currency"><option>UGX</option></select>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-md-6 my-auto">
+					<div class="form-group">
+						<label class="form-check-label">Item</label>
+						<input class="form-control" type="text" name="item">
+					</div>
+
+					<div class="form-group">
+						<label class="form-check-label">Description (Specifications, Terms of Reference, Scope of Works)</label>
+						<textarea class="form-control" name="description"></textarea>
+					</div>
+
+					<div class="form-group">
+						<label class="form-check-label">Quantity</label>
+						<input class="form-control" type="number" name="quantity">
+					</div>
+
+					<div class="form-group">
+						<label class="form-check-label">Unit of Measure</label>
+						<input class="form-control" type="text" name="unit-of-measure">
+					</div>
+
+					<div class="form-group">
+						<label class="form-check-label">Estimated Cost</label>
+						<input class="form-control" type="number" name="estimated-cost">
+					</div>
+
+					<div class="form-group">
+						<label class="form-check-label">Market Price</label>
+						<input class="form-control" type="number" name="market-price">
+					</div>
+
+					<div class="form-group">
+						<button class="btn btn-block btn-dark">Add</button>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<table class="table table-hover">
+					  <thead class="bg-faded">
+					      <th class="p-1 border-0" scope="col">Item No</th>
+					      <th class="p-1 border-0" scope="col">Item Name</th>
+					      <th class="p-1 border-0" scope="col">Quantity</th>
+					      <th class="p-1 border-0" scope="col">Estimated Cost</th>
+					      <th class="p-1 border-0" scope="col"></th>
+					  </thead>
+					  <tbody class="border">
+					    <tr style="cursor: pointer">
+					      <th scope="row" class="p-1">1</th>
+					      <td class="p-1">Business Card</td>
+					      <td class="p-1">UGX 50</td>
+					      <td class="p-1">UGX 500</td>
+					      <td class="p-1"><button class="border-0">delete</button></td>
+					    </tr>
+					    <tr style="cursor: pointer">
+					      <th scope="row" class="p-1">2</th>
+					      <td class="p-1">Rim of Paper</td>
+					      <td class="p-1">UGX 50</td>
+					      <td class="p-1">UGX 15000</td>
+					      <td class="p-1"><button class="border-0">delete</button></td>
+					    </tr>
+					</table>
+
+					<hr>
+					
+					<div class="form-group">
+						<label class="form-check-label">Estimated Total Cost</label>
+						<label class="form-control">UGX 600000</label>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<br>
+
+	<div class="card">
+		<div class="card-header p-2">
+			Confirmation
+		</div>
+
+		<div class="card-body p-2">
+			<div class="row">
+				<div class="col-md-6">
+					<label class="font-weight-bold">Member of the Department</label>
+					<div class="form-group">
+						<label class="form-check-label">Member</label>
+						<input class="form-control" type="text" name="subject">
+					</div>
+
+					<div class="form-group">
+						<button class="btn btn-block btn-success">Confirm</button>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<label class="font-weight-bold">Head of the Department</label>
+					<div class="form-group">
+						<label class="form-check-label">H.O.D</label>
+						<input class="form-control" type="text" name="subject">
+					</div>
+
+					<div class="form-group">
+						<button class="btn btn-block btn-success">Confirm</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

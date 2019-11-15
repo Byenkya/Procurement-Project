@@ -1,0 +1,12 @@
+<div align="center">
+    <h1>Register member form!!</h1> 
+    <form action="{% url 'procurement:index' %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="first_name" placeholder="First Name"><br><br>
+        <input type="text" name="last_name" placeholder="Last Name"><br><br>
+        <input type="email" name="email" placeholder="johndoe@example.com"><br><br>
+        <input type="text" name="telephone" placeholder="telephone number"><br><br>
+        <input type="submit" value="Register"><br><br>
+    </form>
+</div>
+    

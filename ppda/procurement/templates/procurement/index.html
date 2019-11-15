@@ -1,0 +1,13 @@
+{% block content %}
+    <div align="center">
+        {% if user.is_authenticated %}
+            Hello, {{ user.username }}!!<br><br>
+            Email, {{ user.profile.hod.email }}
+            <p><a href="{% url 'logout' %}">Logout</a></p>
+        {% else %}
+            <p>You are not logged in!! </p>
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
