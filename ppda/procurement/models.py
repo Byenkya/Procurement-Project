@@ -10,7 +10,7 @@ class HeadOfDepartment(models.Model):
     telephone = models.CharField(max_length=15)
     signature = models.ImageField(upload_to='images/', null=True, verbose_name="")
     def __str__(self):
-        return self.first_name +' '+self.last_name +' '+ self.email +' '+ self.telephone
+        return " ".join([self.first_name,self.last_name,self.email,self.telephone])
 
 class UserDepartment(models.Model):
     id = models.AutoField(primary_key=True)
@@ -34,7 +34,7 @@ class Member(models.Model):
     user_department_id = models.ForeignKey(UserDepartment, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.first_name +' '+ self.last_name 
+        return " ".join([self.first_name,self.last_name])
 
 class Office(models.Model):
     id = models.AutoField(primary_key=True)
@@ -53,13 +53,13 @@ class OfficeMember(models.Model):
     office_id = models.ForeignKey(Office, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.first_name+' '+ self.last_name+' '+ str(self.email)+' '+ self.telephone
+        return " ".join([self.first_name,self.last_name,str(self.email),self.telephone])
  
 class Profile(models.Model):
     user = models.OneToOneField(User,unique=False,on_delete=models.CASCADE)
-    hod = models.ForeignKey(HeadOfDepartment, blank=True, on_delete=models.CASCADE)
-    member = models.ForeignKey(Member, blank=True, on_delete=models.CASCADE)
-    office_member_id = models.ForeignKey(OfficeMember,blank=True, on_delete=models.CASCADE) 
+    hod = models.ForeignKey(HeadOfDepartment, blank=True, on_delete=models.CASCADE, null=True)
+    member = models.ForeignKey(Member, blank=True, on_delete=models.CASCADE,null=True)
+    office_member_id = models.ForeignKey(OfficeMember,blank=True, on_delete=models.CASCADE,null=True) 
 
     def __str__(self):
         return str(self.user)
@@ -81,34 +81,47 @@ class ProcurementStage(models.Model):
     description = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.stage_name +' '+ self.state +' '+ self.description
+        return " ".join([self.stage_name,self.state,self.description])
 
 class Requisition(models.Model):
     id = models.AutoField(primary_key=True)
     reference_number = models.CharField(max_length=15)
     financial_year = models.CharField(max_length=4)
     pde_code = models.CharField(max_length=10)
-    sequence_number = models.CharField(max_length=10)
+    sequence_number = models.CharField(max_length=10,unique=True)
     requisition_type = models.CharField(max_length=10)
     subject = models.CharField(max_length=10)
     plan_reference = models.CharField(max_length=10)
     delivery_location = models.CharField(max_length=10)
     date_required = models.DateField()
-    initiation = models.DateField()
-    member_confirmation = models.BooleanField()
-    hod_confirmation = models.BooleanField()
-    member_confirmation_date = models.DateField()
-    hod_confirmation_date = models.DateField()
-    date_of_submission = models.DateField()
-    user_department_id = models.ForeignKey(UserDepartment, on_delete=models.CASCADE)
-    initiator = models.ForeignKey(Member, on_delete=models.CASCADE)
-    procurement_stage = models.ForeignKey(ProcurementStage, on_delete=models.CASCADE)
+    initiation = models.DateField(blank=True,null=True)
+    member_confirmation = models.BooleanField(blank=True,null=True)
+    hod_confirmation = models.BooleanField(blank=True,null=True)
+    member_confirmation_date = models.DateField(blank=True,null=True)
+    hod_confirmation_date = models.DateField(blank=True,null=True)
+    date_of_submission = models.DateField(blank=True,null=True)
+    user_department_id = models.ForeignKey(UserDepartment,blank=True,null=True,on_delete=models.CASCADE)
+    initiator = models.ForeignKey(Member,blank=True,null=True,on_delete=models.CASCADE)
+    procurement_stage = models.ForeignKey(ProcurementStage,blank=True,null=True,on_delete=models.CASCADE)
 
     def  __str__(self):
-        return self.reference_number+' '+ self.financial_year+' '+ self.pde_code+' '+ self.sequence_number+' '+ self.requisition_type+' '+ self.subject+' '+ self.plan_reference+' '
-        + self.delivery_location+' '+ str(self.date_required)+' '+ str(self.initiation)+' '+ str(self.member_confirmation)+' '
-        + str(self.hod_confirmation)+' '+str( self.member_confirmation_date)+' '+ str(self.hod_confirmation_date)+' '
-        + str(self.date_of_submission)
+        return " ".join([
+                self.reference_number,
+                self.financial_year,
+                self.pde_code,
+                self.sequence_number,
+                self.requisition_type,
+                self.subject,
+                self.plan_reference,
+                self.delivery_location,
+                str(self.date_required),
+                str(self.initiation),
+                str(self.member_confirmation),
+                str(self.hod_confirmation),
+                str(self.member_confirmation_date),
+                str(self.hod_confirmation_date),
+                str(self.date_of_submission)
+                ])
 
 class Details(models.Model):
     id = models.AutoField(primary_key=True)
@@ -122,4 +135,12 @@ class Details(models.Model):
     requisition_id = models.ForeignKey(Requisition, on_delete=models.CASCADE)
 
     def  __str__(self):
-        self.item_name+' '+ self.description+' '+ str(self.quantity)+' '+ str(self.unit_of_measure)+' '+ self.estimated_cost
+        return " ".join([
+                self.item_name,
+                self.description,
+                str(self.quantity),
+                str(self.unit_of_measure),
+                str(self.estimated_cost),
+                self.currency,
+                str(self.market_price)])
+        

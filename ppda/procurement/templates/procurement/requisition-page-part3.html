@@ -1,0 +1,30 @@
+{% extends 'procurement/HOD-base.html' %}
+
+{% block content %}	
+    <div class="card m-4">
+        <div class="card-body p-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-header p-2 m-1 text-center">
+                        <strong>(2) Confirmation of Request</strong>  
+                    </div>
+                    <label class="font-weight-bold p-2">Head of the user department</label>
+                    <div class="row p-2">
+                        <div class="col-md-10">
+                            <label class="form-check-label">
+                                <strong>I {{ user.last_name }} {{ user.first_name }}</strong>,<br/>
+                                <i>Do agree by the following requisition details to the best of my Knowledge.</i>
+                            </label>
+                        </div>
+                        <div class="col-md-2">
+                            <input class="form-control" type="checkbox" name="member">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group m-4">
+        <button class="btn btn-block btn-success">Confirm</button>
+    </div>
+{% endblock %}
