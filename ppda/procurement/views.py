@@ -8,7 +8,8 @@ from .models import (
     Details,
     Description,
     RequisitionStatus,
-    RequisitionApprovedCount
+    RequisitionApprovedCount,
+    AvailabilityOfFunds
     )
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
@@ -420,6 +421,7 @@ def confirm_availability_funds(request):
             if (requisition.member_confirmation and 
                 requisition.hod_confirmation and
                 requisition.date_of_submission and
+                requisition.accepted == False and 
                 requisition.rejected == False
                 ):
                     yet_to_be_confirmed.append(requisition)
@@ -465,3 +467,41 @@ def reject_requisition(request):
                     })
     else:
         return JsonResponse({"success": False})
+
+@login_required
+def confirm_requisition(request, id):
+    """
+        This is the routing function used by the Accounting Officer to confirm the availbility of funds.
+    """
+    if request.method == "POST":
+        if id:
+            requisition = Requisition.objects.get(id=id)
+            vote_no = request.POST["vote_no"]
+            programme = request.POST["programme"]
+            sub_programme = request.POST["sub_programme"]
+            item = request.POST["item_name"]
+            balance_remaining = request.POST["balance_remaining"]
+            confirmation = AvailabilityOfFunds(
+                vote_no = vote_no,
+                programme = programme,
+                sub_programme = sub_programme,
+                item = item,
+                balance_remaining = balance_remaining,
+                req_id = requisition
+            )
+            requisition.ao_confirmation = True
+            requisition.ao_confirmation_date = datetime.now()
+            requisition.accepted = True
+            confirmation.save()
+            requisition.save()
+
+            messages.success(request, f"Confirmation of requisition with subject of procurement {requisition.subject} was a success!.")
+            return redirect("procurement:confirm_availability_funds")
+
+        else:
+            messages.warning(request,f"Requisition with id {id} does not exists!.")
+            return redirect("procurement:confirm_availability_funds")
+
+    else:
+        return redirect("procurement:confirm_availability_funds")
+

@@ -219,6 +219,7 @@ class RequisitionApprovedCount:
                 if (requisition.member_confirmation and 
                     requisition.hod_confirmation and
                     requisition.date_of_submission and
+                    requisition.accepted == False and 
                     requisition.rejected == False
                     ):
                     yield requisition

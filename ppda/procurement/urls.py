@@ -18,5 +18,6 @@ urlpatterns = [
     path('confirm_availability_funds', views.confirm_availability_funds, name="confirm_availability_funds"),
     path('requisition_more_details/<int:id>/<int:count>', views.requisition_more_details, name='requisition_more_details'),
     path('reject_requisition', views.reject_requisition, name="reject_requisition"),
+    path('confirm_requisition/<int:id>',views.confirm_requisition, name="confirm_requisition"),
     path('pdu', views.pdu, name="pdu")
 ] 
