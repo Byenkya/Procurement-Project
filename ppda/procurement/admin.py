@@ -8,7 +8,8 @@ from .models import (
     Profile,
     ProcurementStage,
     Requisition,
-    Details
+    Details,
+    AvailabilityOfFunds
 )
 
 admin.site.register(UserDepartment)
@@ -20,3 +21,4 @@ admin.site.register(Profile)
 admin.site.register(ProcurementStage)
 admin.site.register(Requisition)
 admin.site.register(Details)
+admin.site.register(AvailabilityOfFunds)

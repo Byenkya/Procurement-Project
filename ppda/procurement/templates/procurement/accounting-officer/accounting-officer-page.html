@@ -1,0 +1,45 @@
+{% extends 'procurement/HOD-base.html' %}
+
+{% block content %}	
+    <div class="card m-4" style="font-family: 'Courier New', Courier, monospace;">
+        <div class="card-body p-2">
+            <h4 class="text-center">Procurement Requisitions submitted for Funding and Approval</h4>
+        </div>
+    </div>
+    <div class="card m-4" style="font-family: 'Courier New', Courier, monospace;">
+        <div class="card-body p-2">
+            <div class="bs-example">
+                <table class="table" style="width: auto;">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>User Department</th>
+                            <th>Subject of Procurement</th>
+                            <th>Procurement Plan Reference</th>
+                            <th>Location Delivery</th>
+                            <th>Date Required</th>
+                            <th>More Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for requisition in yet_to_be_confirmed %}
+                            <tr>
+                                <td>{{ requisition.id }}</td>
+                                <td>{{ requisition.user_department_id.department_name }}</td>
+                                <td>{{ requisition.subject }}</td>
+                                <td>{{ requisition.plan_reference }}</td>
+                                <td>{{ requisition.delivery_location }}</td>
+                                <td>{{ requisition.date_required }}</td>
+                                <td> 
+                                    <a  class="info btn btn-outline-dark btn-sm text-center font-weight-bold" href="{% url 'procurement:requisition_more_details' id=requisition.id count=req_count %}">
+                                        more&nbsp;<span class="fa fa-plus"></span>
+                                    </a>
+                                </td>
+                            </tr>  
+                        {% endfor %}   
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

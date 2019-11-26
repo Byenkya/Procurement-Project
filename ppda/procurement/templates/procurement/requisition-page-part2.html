@@ -24,23 +24,28 @@
 					{% if requisition.requisition_type == 'Supplies' %}
 						<div class="form-group">
 							<label class="form-check-label">Description (Specifications, Terms of Reference, Scope of Works)</label>
-							<textarea id="description" class="form-control" name="description" required></textarea><br/>
-							<label class="form-check-label">Attach Specifications</label>
-							<input id="file" type="file" name="file" required>
+							<label class="form-check-label">Specifications</label>
+							<textarea id="specifications" class="form-control" name="specifications"></textarea><br/>
+							<label class="form-check-label">Attach terms of reference</label>
+							<input id="file_terms" type="file" name="file">
 						</div>
 					{% elif requisition.requisition_type == 'Works' %}
 						<div class="form-group">
 							<label class="form-check-label">Description (Specifications, Terms of Reference, Scope of Works)</label>
-							<textarea id="description" class="form-control" name="description" required></textarea><br/>
-							<label class="form-check-label">Attach terms of reference or scope of works</label>
-							<input id="file" type="file" name="file" required>
+							<label class="form-check-label">Specifications</label>
+							<textarea id="specifications" class="form-control" name="specifications"></textarea><br/>
+							<label class="form-check-label">Attach terms of reference</label>
+							<input id="file_terms" type="file" name="file"><br/><br/>
+							<label class="form-check-label">Attach scope of works</label>
+							<input id="file_works" type="file" name="file">
 						</div>
 					{% else %}
 						<div class="form-group">
 							<label class="form-check-label">Description (Specifications, Terms of Reference, Scope of Works)</label>
-							<textarea id="description" class="form-control" name="description" required></textarea><br/>
-							<label class="form-check-label">Attach terms of reference or scope of works</label>
-							<input id="file" type="file" name="file" required>
+							<label class="form-check-label">Specifications</label>
+							<textarea id="specifications" class="form-control" name="specifications"></textarea><br/>
+							<label class="form-check-label">Attach terms of reference</label>
+							<input id="file_terms" type="file" name="file">
 						</div>
 					{% endif %}
 
@@ -51,7 +56,7 @@
 
 					<div class="form-group">
 						<label class="form-check-label">Unit of Measure</label>
-						<input id="unit_of_measure" class="form-control" type="text" name="unit-of-measure" required>
+						<input id="unit_of_measure" class="form-control" type="number" name="unit-of-measure" required>
 					</div>
 
 					<div class="form-group">
@@ -74,7 +79,9 @@
 					  <thead class="bg-faded">
 						  <th class="p-1 border-0" scope="col">Item No</th>
 						  <th class="p-1 border-0" scope="col">Item Name</th>
-						  <th class="p-1 border-0" scope="col" hidden>Description</th>
+						  <th class="p-1 border-0" scope="col" hidden>Specification</th>
+						  <th class="p-1 border-0" scope="col" hidden>Terms of reference</th>
+						  <th class="p-1 border-0" scope="col" hidden>Scope of works</th>
 						  <th class="p-1 border-0" scope="col">Quantity</th>
 						  <th class="p-1 border-0" scope="col" hidden>Unit of Measure</th>
 						  <th class="p-1 border-0" scope="col">Estimated Cost</th>
@@ -86,7 +93,9 @@
 						<tr style="cursor: pointer">
 						  <th scope="row" class="p-1">1</th>
 						  <td class="p-1">Business Card</td>
-						  <td class="p-1" hidden>Business Card</td>
+						  <td class="p-1" hidden>Business Card lamanted with a white color silicon cover</td>
+						  <td class="p-1" hidden></td>
+						  <td class="p-1" hidden></td>
 						  <td class="p-1">50</td>
 						  <td class="p-1" hidden>50</td>
 						  <td class="p-1 estimated">500</td>
@@ -97,7 +106,9 @@
 						<tr style="cursor: pointer">
 						  <th scope="row" class="p-1">2</th>
 						  <td class="p-1">Rim of Paper</td>
-						   <td class="p-1" hidden>Rim of Paper</td>
+						  <td class="p-1" hidden>Rule rim of paper 500 sheets</td>
+						  <td class="p-1" hidden></td>
+						  <td class="p-1" hidden></td>
 						  <td class="p-1">50</td>
 						  <td class="p-1" hidden>50</td>
 						  <td class="p-1 estimated">15000</td>
@@ -131,7 +142,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="card-header p-2 m-1 text-center">
-									<strong>(1) Request for Procurement</strong>  
+									<strong>Request for Procurement</strong>  
 								</div>
 								<label class="font-weight-bold">Member of the user department</label>
 								<div class="form-group">
@@ -143,18 +154,17 @@
 											</label>
 										</div>
 										<div class="col-md-2">
-											<input class="form-control" type="checkbox" name="member">
+											<div class="custom-control custom-checkbox mr-sm-2">
+												<input type="checkbox" class="custom-control-input" id="member_confirmation">
+												<label class="custom-control-label" for="member_confirmation"></label>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<hr/>
-						<div class="row">
-							<div class="col-md-12">
-								<button type="submit" class="btn btn-block btn-success" id="next">Next</button>
-							</div>
-						</div>
+						<div id="next_step" class="row"></div>
 					</div>
 
 				</div>
@@ -163,10 +173,10 @@
 	</div>
 <div class="form-group m-3">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12" align="center">
 			<form method="GET" action="{% url 'procurement:back_to_requisition_part1' %}">
 				<input type="text" name="partial_info" value="{{requisition}}" hidden>
-				<button type="submit" class="btn btn-block btn-success">Back</button>
+				<button type="submit" class="btn btn-outline-info btn-lg" style='width:50%;'>Back</button>
 			</form>
 		</div>
 	</div>
@@ -174,43 +184,142 @@
 <script>
 	var count = 2;
 	$("#add").click(function(){
-		var currency = document.getElementById("currency").value;
-		var item = document.getElementById("item").value;
-		var description = document.getElementById("description").value;
-		var quantity = document.getElementById("quantity").value;
-		var unit_of_measure = document.getElementById("unit_of_measure").value;
-		var estimated_cost = document.getElementById("estimated_cost").value;
-		var market_price = document.getElementById("market_price").value;
+		if ('{{ requisition.requisition_type }}' == 'Supplies'){
+			var currency = document.getElementById("currency").value;
+			var item = document.getElementById("item").value;
+			var specifications = document.getElementById("specifications").value;
+			var terms_of_reference = document.getElementById("file_terms").value;
+			var quantity = document.getElementById("quantity").value;
+			var unit_of_measure = document.getElementById("unit_of_measure").value;
+			var estimated_cost = document.getElementById("estimated_cost").value;
+			var market_price = document.getElementById("market_price").value;
 
-		if(item &&  description && quantity && unit_of_measure && estimated_cost && market_price){
-			count++
-			$("tbody").append(
-				"<tr style='cursor: pointer'>" +
-				"<th scope='row' class='p-1'>"+ count +"</th>" +
-				" <td class='p-1'>"+ item +"</td>" +
-				"<td class='p-1' hidden>" + description +"</td>" +
-				"<td class='p-1'>" + quantity +"</td>" +
-				"<td class='p-1' hidden>" + unit_of_measure +"</td>" +
-				"<td class='p-1 estimated'>" + estimated_cost +"</td>" +
-				"<td class='p-1' hidden>" + market_price +"</td>" +
-				"<td class='p-1' hidden>" + currency +"</td>" +
-				"<td class='p-1'><button class='border-0 delete-button'>delete</button></td>" +
-				"</tr>"
-			);
-			document.getElementById("item").value = "";
-			document.getElementById("description").value = "";
-			document.getElementById("quantity").value = "";
-			document.getElementById("unit_of_measure").value = "";
-			document.getElementById("estimated_cost").value = "";
-			document.getElementById("market_price").value = "";
-			
-			var change_currency = document.getElementById('change_currency').innerText = currency;
-			var estimated_total_cost = Number(document.getElementById('estimated_total_cost').innerText);
-			estimated_total_cost += Number(estimated_cost);
-			document.getElementById('estimated_total_cost').innerText = estimated_total_cost;
+			if(item &&  specifications && terms_of_reference && quantity && unit_of_measure && estimated_cost && market_price){
+				count++
+				$("tbody").append(
+					"<tr style='cursor: pointer'>" +
+					"<th scope='row' class='p-1'>"+ count +"</th>" +
+					" <td class='p-1'>"+ item +"</td>" +
+					"<td class='p-1' hidden>" + specifications +"</td>" +
+					"<td class='p-1' hidden>" + terms_of_reference +"</td>" +
+					"<td class='p-1' hidden></td>" +
+					"<td class='p-1'>" + quantity +"</td>" +
+					"<td class='p-1' hidden>" + unit_of_measure +"</td>" +
+					"<td class='p-1 estimated'>" + estimated_cost +"</td>" +
+					"<td class='p-1' hidden>" + market_price +"</td>" +
+					"<td class='p-1' hidden>" + currency +"</td>" +
+					"<td class='p-1'><button class='border-0 delete-button'>delete</button></td>" +
+					"</tr>"
+				);
+
+				document.getElementById("item").value = "";
+				document.getElementById("specifications").value = "";
+				document.getElementById("file_terms").value = "";
+				document.getElementById("quantity").value = "";
+				document.getElementById("unit_of_measure").value = "";
+				document.getElementById("estimated_cost").value = "";
+				document.getElementById("market_price").value = "";
+				
+				var change_currency = document.getElementById('change_currency').innerText = currency;
+				var estimated_total_cost = Number(document.getElementById('estimated_total_cost').innerText);
+				estimated_total_cost += Number(estimated_cost);
+				document.getElementById('estimated_total_cost').innerText = estimated_total_cost;
+
+			}else{
+				window.alert('Missing details');
+			}
+
+		}else if('{{ requisition.requisition_type }}' == 'Works'){
+			var currency = document.getElementById("currency").value;
+			var item = document.getElementById("item").value;
+			var specifications = document.getElementById("specifications").value;
+			var terms_of_reference = document.getElementById("file_terms").value;
+			var scope_of_works = document.getElementById("file_works").value;
+			var quantity = document.getElementById("quantity").value;
+			var unit_of_measure = document.getElementById("unit_of_measure").value;
+			var estimated_cost = document.getElementById("estimated_cost").value;
+			var market_price = document.getElementById("market_price").value;
+
+			if(item &&  specifications && terms_of_reference && scope_of_works && quantity && unit_of_measure && estimated_cost && market_price){
+				count++
+				$("tbody").append(
+					"<tr style='cursor: pointer'>" +
+					"<th scope='row' class='p-1'>"+ count +"</th>" +
+					" <td class='p-1'>"+ item +"</td>" +
+					"<td class='p-1' hidden>" + specifications +"</td>" +
+					"<td class='p-1' hidden>" + terms_of_reference +"</td>" +
+					"<td class='p-1' hidden>" + scope_of_works +"</td>" +
+					"<td class='p-1'>" + quantity +"</td>" +
+					"<td class='p-1' hidden>" + unit_of_measure +"</td>" +
+					"<td class='p-1 estimated'>" + estimated_cost +"</td>" +
+					"<td class='p-1' hidden>" + market_price +"</td>" +
+					"<td class='p-1' hidden>" + currency +"</td>" +
+					"<td class='p-1'><button class='border-0 delete-button'>delete</button></td>" +
+					"</tr>"
+				);
+
+				document.getElementById("item").value = "";
+				document.getElementById("specifications").value = "";
+				document.getElementById("file_terms").value = "";
+				document.getElementById("file_works").value = "";
+				document.getElementById("quantity").value = "";
+				document.getElementById("unit_of_measure").value = "";
+				document.getElementById("estimated_cost").value = "";
+				document.getElementById("market_price").value = "";
+				
+				var change_currency = document.getElementById('change_currency').innerText = currency;
+				var estimated_total_cost = Number(document.getElementById('estimated_total_cost').innerText);
+				estimated_total_cost += Number(estimated_cost);
+				document.getElementById('estimated_total_cost').innerText = estimated_total_cost;
+
+			}else{
+				window.alert('Missing details');
+			}
 
 		}else{
-			window.alert('Missing details');
+			var currency = document.getElementById("currency").value;
+			var item = document.getElementById("item").value;
+			var specifications = document.getElementById("specifications").value;
+			var terms_of_reference = document.getElementById("file_terms").value;
+			var quantity = document.getElementById("quantity").value;
+			var unit_of_measure = document.getElementById("unit_of_measure").value;
+			var estimated_cost = document.getElementById("estimated_cost").value;
+			var market_price = document.getElementById("market_price").value;
+
+			if(item &&  specifications && terms_of_reference && quantity && unit_of_measure && estimated_cost && market_price){
+			count++
+				$("tbody").append(
+					"<tr style='cursor: pointer'>" +
+					"<th scope='row' class='p-1'>"+ count +"</th>" +
+					" <td class='p-1'>"+ item +"</td>" +
+					"<td class='p-1' hidden>" + specifications +"</td>" +
+					"<td class='p-1' hidden>" + terms_of_reference +"</td>" +
+					"<td class='p-1' hidden></td>" +
+					"<td class='p-1'>" + quantity +"</td>" +
+					"<td class='p-1' hidden>" + unit_of_measure +"</td>" +
+					"<td class='p-1 estimated'>" + estimated_cost +"</td>" +
+					"<td class='p-1' hidden>" + market_price +"</td>" +
+					"<td class='p-1' hidden>" + currency +"</td>" +
+					"<td class='p-1'><button class='border-0 delete-button'>delete</button></td>" +
+					"</tr>"
+				);
+
+				document.getElementById("item").value = "";
+				document.getElementById("specifications").value = "";
+				document.getElementById("file_terms").value = "";
+				document.getElementById("quantity").value = "";
+				document.getElementById("unit_of_measure").value = "";
+				document.getElementById("estimated_cost").value = "";
+				document.getElementById("market_price").value = "";
+				
+				var change_currency = document.getElementById('change_currency').innerText = currency;
+				var estimated_total_cost = Number(document.getElementById('estimated_total_cost').innerText);
+				estimated_total_cost += Number(estimated_cost);
+				document.getElementById('estimated_total_cost').innerText = estimated_total_cost;
+
+			}else{
+				window.alert('Missing details');
+			}
 		}
 
 		$(".delete-button").click(function(){
@@ -227,48 +336,68 @@
 		})
         
     });
+	
+	// member_confirmation logic
+	$("#member_confirmation").click(function(){
+		var member_confirmation = document.querySelector("#member_confirmation").checked;
+		if(member_confirmation){
+			$("#next_step").append(
+				"<div class='col-md-12' align='center'><button type='submit' class='btn btn-outline-info btn-lg' style='width:50%;' id='next'>Next</button></div>"
+			);
 
-	// function to save details information to the database.
-	$("#next").click(function(){
-		var sequence_number = document.getElementById("sequence_number").innerHTML;
-		var req_details_array = [];
-		var table = document.getElementById("details");
-		// get the rows of the table 
-		var rows = table.rows.length;
-		// loop through the rows
-		for(var i=0;i<rows;i++){
-			// get cells of the current row
-			var cells = table.rows.item(i).cells;
-			// get the total number of cells of the current row.
-			var cell_length = cells.length;
-			// loops through each cell of the current row.
-			var details = [];
-			var requisition_details = {};
-			for(var j=0;j<cell_length;j++){
-				var cell_value = cells.item(j).innerHTML;
-				details.push(cell_value)
-			}
-			requisition_details.item_name = details[1];
-			requisition_details.description = details[2];
-			requisition_details.quantity = details[3];
-			requisition_details.unit_of_measure = details[4];
-			requisition_details.estimated_cost = details[5];
-			requisition_details.market_price = details[6];
-			requisition_details.currency = details[7];
-			req_details_array.push(requisition_details);
+			// function to save details information to the database.
+			$("#next").click(function(){
+				var sequence_number = document.getElementById("sequence_number").innerHTML;
+				var estimated_total_cost = document.getElementById('estimated_total_cost').innerText;
+				var req_details_array = [];
+				var table = document.getElementById("details");
+				// get the rows of the table <div class='col-md-12'><button type='submit' class='btn btn-block btn-success' id='next'>Next</button></div>
+				var rows = table.rows.length;
+				// loop through the rows
+				for(var i=0;i<rows;i++){
+					// get cells of the current row
+					var cells = table.rows.item(i).cells;
+					// get the total number of cells of the current row.
+					var cell_length = cells.length;
+					// loops through each cell of the current row.
+					var details = [];
+					var requisition_details = {};
+					for(var j=0;j<cell_length;j++){
+						var cell_value = cells.item(j).innerHTML;
+						details.push(cell_value)
+					}
+					requisition_details.item_name = details[1];
+					requisition_details.specifications = details[2];
+					requisition_details.terms_of_reference = details[3];
+					requisition_details.scope_of_works = details[4];
+					requisition_details.quantity = details[5];
+					requisition_details.unit_of_measure = details[6];
+					requisition_details.estimated_cost = details[7];
+					requisition_details.market_price = details[8];
+					requisition_details.currency = details[9];
+					req_details_array.push(requisition_details);
+				}
+
+				req_details_array.splice(0,1)
+				let data = {};
+				data.seq_num = sequence_number;
+				data.estimated_total_cost = estimated_total_cost;
+				data.member_confirmation = member_confirmation;
+				data.details = JSON.stringify(req_details_array);
+				data.csrfmiddlewaretoken = "{{ csrf_token }}";
+				$.post(
+					"{% url 'procurement:ajax_filter' %}",
+					data,
+					function(data, status){
+						window.location.href = data.url;
+					}
+				);
+			});
+
+		}else{
+			$("#next").remove();
 		}
-		req_details_array.splice(0,1)
-		let data = {};
-		data.seq_num = sequence_number;
-		data.details = JSON.stringify(req_details_array);
-		data.csrfmiddlewaretoken = "{{ csrf_token }}";
-		$.post(
-			"{% url 'procurement:ajax_filter' %}",
-			data,
-			function(data, status){
-				window.location.href = data.url;
-			}
-		);
+
 	});
 </script>
 {% endblock %}
