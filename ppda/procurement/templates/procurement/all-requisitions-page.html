@@ -416,40 +416,195 @@
                         </div>
                     </div>
                 </div><br/>
-                <script>
-                    //hod confirmation logic
-                    $("#hod_confirmation{{requisition.id}}").click(function(){
-                        var hod_confirmation = document.querySelector("#hod_confirmation{{requisition.id}}").checked;
-                        if (hod_confirmation){
-                            $("#done{{requisition.id}}").append(
-                                "<button class='btn btn-outline-info btn-lg' style='width:50%;' id='confirm{{requisition.id}}'>Confirm</button>"
-                            );
-                            $("#confirm{{requisition.id}}").click(function(){
-                                var requisition_id = document.getElementById("{{requisition.id}}").innerHTML;
-                                data = {};
-                                data.requisition_id = requisition_id
-                                data.csrfmiddlewaretoken = "{{ csrf_token }}";
-                                $.post(
-                                    "{% url 'procurement:hod_confirmation' %}",
-                                    data,
-                                    function(data, status){
-                                        window.location.href = data.url;
-                                    }
-                                );
-                            });
-                            
-                        }else{
-                            $("#confirm{{requisition.id}}").remove();
-                        }
-                    });
-                </script>
             {% endfor %}
         </div>
         <div class="tab-pane fade" id="nav-Confirmed" role="tabpanel" aria-labelledby="nav-Confirmed-tab">
             Confirmed
         </div>
         <div class="tab-pane fade" id="nav-rejected" role="tabpanel" aria-labelledby="nav-rejected-tab">
-            Rejected
+            {% for requisition,details in rejected %}
+                <div class="card m-4">
+                    <div class="card-body p-2 text-center text-danger" style="font-family:'Courier New', Courier, monospace;">
+                        <strong>REASON FOR REJECTION</strong>
+                        <div class="card-body p-2 font-weight-bold">
+                            <p class="text-center" style="color: blue;">{{requisition.reason_for_rejection}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card m-2">
+                    <div class="card-body p-2">
+                        <table style=" border: 1px solid black; width:100%; font-family: 'Courier New', Courier, monospace;">
+                            <tr>
+                                <th class="text-center" colspan="4">Procurement Reference Number</th>
+                            </tr>
+                            <tr class="text-center">
+                                <th style=" border: 1px solid black;">Code for PDE</th>
+                                <th style=" border: 1px solid black;">Supplies/Works/Non-consultancy service</th>
+                                <th style=" border: 1px solid black;">Financial year</th>
+                                <th style=" border: 1px solid black;">Sequence number</th>
+                            </tr>
+                            <tr class="text-center">
+                                <td style=" border: 1px solid black;">{{ requisition.pde_code }}</td>
+                                <td style=" border: 1px solid black;">{{ requisition.requisition_type }}</td>
+                                <td style=" border: 1px solid black;">{{ requisition.financial_year }}</td>
+                                <td style=" border: 1px solid black;">{{ requisition.sequence_number }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-center" colspan="4">Particulars of Procurement</th>
+                            </tr>
+                            <tr>
+                                <td style=" border: 1px solid black;">&nbsp;Subject of Procurement</td>
+                                <td colspan="3" style=" border: 1px solid black;" class="text-center">{{ requisition.subject }}</td>
+                            </tr>
+                            <tr>
+                                <td style=" border: 1px solid black;">&nbsp;Procurement Plan Reference</td>
+                                <td colspan="3" style=" border: 1px solid black;" class="text-center">{{ requisition.plan_reference }}</td>
+                            </tr>
+                            <tr>
+                                <td style=" border: 1px solid black;">&nbsp;Location for delivery</td>
+                                <td colspan="3" style=" border: 1px solid black;" class="text-center">{{ requisition.delivery_location }}</td>
+                            </tr>
+                            <tr>
+                                <td style=" border: 1px solid black;">&nbsp;Date required</td>
+                                <td colspan="3" style=" border: 1px solid black;" class="text-center">{{ requisition.date_required }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-center" colspan="4">Details relating to the Procurement</th>
+                            </tr>
+        
+                            <tr class="text-center">
+                                <th style=" border: 1px solid black;">Item No.</th>
+                                <th style=" border: 1px solid black;">Item name</th>
+                                <th style=" border: 1px solid black;">Quantity</th>
+                                <th style=" border: 1px solid black;">Market price</th>
+                            </tr>
+                            {% for detail in details %}
+                                <tr class="text-center">
+                                    <td style=" border: 1px solid black;">{{ detail.id }}</td>
+                                    <td style=" border: 1px solid black;">{{ detail.item_name }}</td>
+                                    <td style=" border: 1px solid black;">{{ detail.quantity }}</td>
+                                    <td style=" border: 1px solid black;">
+                                        <div align="right" class="p-1">
+                                            {{ detail.market_price }}
+                                            <button type="button" class="info btn btn-outline-dark btn-sm text-center font-weight-bold" data-toggle="modal" data-target="#requisition_details{{detail.id}}" style="font-size: 10px;display: inline;">
+                                                more&nbsp;<span class="fa fa-plus"></span>
+                                            </button>
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade mt-4" id="requisition_details{{detail.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">{{ detail.item_name }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                </div>
+                                                <div id="modal_body" class="modal-body">
+                                                    <table class="table-striped table-hover" style="font-size: smaller;font-family: 'Times New Roman', Times, serif;">
+                                                        <tr>
+                                                            <th style=" border: 1px solid black;">Item No.</th>
+                                                            <th style=" border: 1px solid black;">Quantity</th>
+                                                            <th style=" border: 1px solid black;">Unit of measure</th>
+                                                            <th style=" border: 1px solid black;">Estimated cost</th>
+                                                            <th style=" border: 1px solid black;">Market price</th>
+                                                            <th style=" border: 1px solid black;">Currency</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style=" border: 1px solid black;" class="text-center">{{ detail.id }}</td>
+                                                            <td style=" border: 1px solid black;" class="text-center">{{ detail.quantity }}</td>
+                                                            <td style=" border: 1px solid black;" class="text-center">{{ detail.unit_of_measure }}</td>
+                                                            <td style=" border: 1px solid black;" class="text-center">{{ detail.estimated_cost }}</td>
+                                                            <td style=" border: 1px solid black;" class="text-center">{{ detail.market_price }}</td>
+                                                            <td style=" border: 1px solid black;" class="text-center">{{ detail.currency }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-center" colspan="6" style=" border: 1px solid black;">
+                                                                Description
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style=" border: 1px solid black;" class="font-weight-bold">Specifications</td>
+                                                            <td style=" border: 1px solid black;" colspan="5" class="m-2">
+                                                                {{detail.requisition_description_id.specification}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style=" border: 1px solid black;" class="font-weight-bold">Terms of Reference</td>
+                                                            <td style=" border: 1px solid black;" colspan="5" class="m-2">
+                                                                &nbsp;<a href="/media/{{detail.requisition_description_id.terms_of_reference}}" open target="_blank" class="font-weight-bold">Read File</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style=" border: 1px solid black;" class="font-weight-bold">Scope of works</td>
+                                                            <td style=" border: 1px solid black;" colspan="5" class="m-2">&nbsp;{{detail.requisition_description_id.scope_of_works}}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <th class="text-center" colspan="3">
+                                    <div align="right">
+                                        Currency:&nbsp;&nbsp;&nbsp;UGX<br/>
+                                        Estimated Total Cost 
+                                    </div>
+                                </th>
+                                <td style=" border: 1px solid black;" class="text-center"><strong>{{ requisition.estimated_total_cost }}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card m-4">
+                                <div class="card-body p-4" style="font-family: 'Courier New', Courier, monospace;">
+                                    <strong><p class="text-center">User department Approval Details</p></strong><hr/>
+                                    <p><strong>Names:</strong> {{ requisition.initiator.first_name }} {{ requisition.initiator.last_name }} </p>
+                                    <p>
+                                        <div class="custom-control custom-checkbox mr-sm-2">
+                                            <input type="checkbox" class="custom-control-input" id="member_confirmation" checked disabled>
+                                            <label class="custom-control-label" for="member_confirmation">Signed</label>
+                                        </div>
+                                    </p>
+                                    <p><strong>Title:</strong> {{ requisition.initiator.title }}</p>
+                                    <p><strong>Date of approval:</strong> {{ requisition.member_confirmation_date }} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card m-4">
+                                <div class="card-body p-4" style="font-family: 'Courier New', Courier, monospace;">
+                                    <strong><p class="text-center">HOD Approval Details</p></strong><hr/>
+                                    <p><strong>Names:</strong> {{ requisition.user_department_id.hod.first_name }} {{ requisition.user_department_id.hod.last_name }} </p>
+                                    <p>
+                                        <div class="custom-control custom-checkbox mr-sm-2">
+                                            <input type="checkbox" class="custom-control-input" id="hod_confirmation" checked disabled>
+                                            <label class="custom-control-label" for="hod_confirmation">Signed</label>
+                                        </div>
+                                    </p>
+                                    <p><strong>Title:</strong> {{ requisition.user_department_id.hod.title }}</p>
+                                    <p><strong>Date of approval:</strong> {{ requisition.hod_confirmation_date }} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-4 card-body">
+                        <div class="col-md-6" align="center">
+                            <a href="#" class="btn btn-outline-info btn-block">Update</a>
+                        </div>
+                        <div class="col-md-6" align="center">
+                            <a href="{% url 'procurement:delete_requisition' id=requisition.id %}" class="btn btn-outline-danger btn-block">Delete</a>
+                        </div>
+                    </div>
+                </div><br/>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

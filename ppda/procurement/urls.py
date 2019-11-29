@@ -19,5 +19,6 @@ urlpatterns = [
     path('requisition_more_details/<int:id>/<int:count>', views.requisition_more_details, name='requisition_more_details'),
     path('reject_requisition', views.reject_requisition, name="reject_requisition"),
     path('confirm_requisition/<int:id>',views.confirm_requisition, name="confirm_requisition"),
+    path('delete_requisition/<int:id>', views.delete_requisition, name="delete_requisition"),
     path('pdu', views.pdu, name="pdu")
 ] 

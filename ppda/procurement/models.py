@@ -11,7 +11,7 @@ class HeadOfDepartment(models.Model):
     title = models.CharField(max_length=30, default="")
     email = models.EmailField()
     telephone = models.CharField(max_length=15)
-    signature = models.ImageField(upload_to='images/', null=True, verbose_name="")
+    # signature = models.ImageField(upload_to='images/', null=True, verbose_name="")
     def __str__(self):
         return " ".join([self.first_name,self.last_name,self.email,self.telephone])
 
@@ -34,7 +34,7 @@ class Member(models.Model):
     username = models.CharField(max_length=15, default="", unique=True)
     email = models.EmailField()
     telephone = models.CharField(max_length=15)
-    signature = models.ImageField(upload_to='images/', null=True, verbose_name="")
+    # signature = models.ImageField(upload_to='images/', null=True, verbose_name="")
     user_department_id = models.ForeignKey(UserDepartment, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -54,7 +54,7 @@ class OfficeMember(models.Model):
     title = models.CharField(max_length=30, default="")
     email = models.EmailField()
     telephone = models.CharField(max_length=15)
-    signature = models.ImageField(upload_to='images/', null=True, verbose_name="")
+    # signature = models.ImageField(upload_to='images/', null=True, verbose_name="")
     office_id = models.ForeignKey(Office, on_delete=models.CASCADE)
 
     def __str__(self):

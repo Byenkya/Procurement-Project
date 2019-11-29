@@ -21,6 +21,13 @@ from django.contrib import messages
 import os
 
 def pending(request,requisitions):
+    """
+        Returns the total number of pending requisitions.
+        params: request, requisitions
+        param type: Request instance ,Requisition instance
+        return: pending requisition count
+        return type: int
+    """
     if request.user.profile.role == "member" or request.user.profile.role == "hod":
         reqs = [
                 req for req in requisitions if( 
@@ -70,8 +77,8 @@ def index(request,requisitions):
         context = {
             "pending_count": pending(request,requisitions)
         }
-
         return render(request, "procurement/HOD-base.html", context)
+
     else:
         return render(request, "procurement/HOD-base.html")
 
@@ -162,6 +169,9 @@ def back_to_requisition_part1(request, id):
     """
         This routing function takes you back to the first part(i.e section) of the requisition form.
         With the details of that initiated requisition.
+
+        param: id
+        param type: int
     """
     if request.method == "GET":
         code_pde = request.GET["pde_code"]
@@ -222,6 +232,9 @@ def add_requisition_detail(request,id):
     """
         This routing function commits all the neccessary details of a particular 
         requisition basing on the sequence number of the requisition.
+        
+        param: id
+        param type: int
     """
     if request.method == "POST":
         requisition = Requisition.objects.get(id=id)
@@ -261,7 +274,6 @@ def add_requisition_detail(request,id):
                     "all_details" : all_details,
                     "estimated_total_cost": sum(estimated_total_cost)
                 }
-
                 return render(request,"procurement/requisition-page-part2.html",context) 
 
             else:
@@ -301,7 +313,6 @@ def add_requisition_detail(request,id):
                     "all_details" : all_details,
                     "estimated_total_cost": sum(estimated_total_cost)
                 }
-
                 return render(request,"procurement/requisition-page-part2.html",context) 
 
 
@@ -309,6 +320,8 @@ def add_requisition_detail(request,id):
 def delete_details(request,id):
     """
         This route is used to delete requisition details
+        param: id
+        param type: int
     """
     if request.method == "GET":
         details = Details.objects.get(id=id)
@@ -324,7 +337,6 @@ def delete_details(request,id):
                     "all_details" : all_details,
                     "estimated_total_cost": sum(estimated_total_cost)
                 }
-
                 return render(request,"procurement/requisition-page-part2.html",context) 
 
             else:
@@ -338,7 +350,6 @@ def delete_details(request,id):
                     "all_details" : all_details,
                     "estimated_total_cost": sum(estimated_total_cost)
                 }
-
                 return render(request,"procurement/requisition-page-part2.html",context) 
         else:
             all_details = Details.objects.all()
@@ -368,7 +379,7 @@ def ajax_filter(request):
                 requisition.member_confirmation = True
                 requisition.member_confirmation_date = datetime.now()
                 requisition.save()
-
+                messages.success(request,"Requisition successfully submited to HOD for approval")
                 return JsonResponse({
                         "success": True,
                         "url": reverse('procurement:view_requisitions'),
@@ -389,6 +400,7 @@ def view_requisitions(request):
     if request.method == "GET":
         pending = []
         submitted = []
+        rejected = []
         requisitions = Requisition.objects.filter().order_by('-initiation')
         for requisition in requisitions:
             if (request.user.profile.member.user_department_id.department_name == 
@@ -408,17 +420,40 @@ def view_requisitions(request):
                     ):
                     details = Details.objects.filter(requisition_id=requisition).all()
                     submitted.append((requisition,details))
-                    
+
+                elif (requisition.rejected):
+                    details = Details.objects.filter(requisition_id=requisition).all()
+                    rejected.append((requisition,details))
                 else:
                     print(requisition)
-        context = {
-            "pending": pending,
-            "pending_count": len(pending),
-            "submitted": submitted
-        }
 
-        return render(request, "procurement/all-requisitions-page.html", context)
+        if len(pending) <= 0:
+            if request.user.profile.role == "hod":
+                messages.info(request,"Currently there are no requisitions to approve.")
+                context = {
+                    "pending": pending,
+                    "pending_count": len(pending),
+                    "submitted": submitted,
+                    "rejected": rejected
+                }
+                return render(request, "procurement/all-requisitions-page.html", context)
 
+            else:
+                context = {
+                    "pending": pending,
+                    "pending_count": len(pending),
+                    "submitted": submitted,
+                    "rejected": rejected
+                }
+                return render(request, "procurement/all-requisitions-page.html", context)
+        else:
+            context = {
+                "pending": pending,
+                "pending_count": len(pending),
+                "submitted": submitted,
+                "rejected": rejected
+            }
+            return render(request, "procurement/all-requisitions-page.html", context)
     else:
         return render(request, "procurement/all-requisitions-page.html")
 
@@ -436,7 +471,7 @@ def hod_confirmation(request):
                 requisition.hod_confirmation_date = datetime.now()
                 requisition.date_of_submission = datetime.now()
                 requisition.save()
-
+                messages.success(request,"Requisition successfully submitted to Accounting Officer")
                 return JsonResponse({
                         "success": True,
                         "url": reverse('procurement:view_requisitions'),
@@ -511,6 +546,19 @@ def removeMember(request):
         }
         return render(request, "procurement/members-table.html",context)
 
+@login_required
+def delete_requisition(request, id):
+    """
+        This route is used to delete a specific requisition from the database.
+        param : id
+        param type: int
+    """
+    if request.method == "GET":
+        requisition = Requisition.objects.get(id=id)
+        requisition.delete()
+        messages.success(request,f"Requisition has been deleted successfully.")
+        return redirect("procurement:view_requisitions")
+
 
 # Accounting officer routes
 @login_required
@@ -531,16 +579,28 @@ def confirm_availability_funds(request):
                 ):
                     yet_to_be_confirmed.append(requisition)
 
-        context = {
+        if len(yet_to_be_confirmed) <= 0:
+            messages.info(request,"Currently there are no requisitions to confirm.")
+            context = {
             "req_count": len(yet_to_be_confirmed),
             "yet_to_be_confirmed": yet_to_be_confirmed,
-        }
-        return render(request,"procurement/accounting-officer/accounting-officer-page.html", context)
+            }
+            return render(request,"procurement/accounting-officer/accounting-officer-page.html", context)
+
+        else:
+            context = {
+                "req_count": len(yet_to_be_confirmed),
+                "yet_to_be_confirmed": yet_to_be_confirmed,
+            }
+            return render(request,"procurement/accounting-officer/accounting-officer-page.html", context)
 
 @login_required  
 def requisition_more_details(request, id, count):
     """
         This route displays more details of a particular requisition.
+
+        param: id, count
+        param type: int
     """
     if request.method == "GET":
         requisition = Requisition.objects.get(id=id)
@@ -567,7 +627,7 @@ def reject_requisition(request):
             requisition.rejected = True
             requisition.reason_for_rejection = reason
             requisition.save()
-
+            messages.info(request,f"The requisition has been sent back to {requisition.user_department_id.department_name} for adjustments")
             return JsonResponse({
                         "success": True,
                         "url": reverse('procurement:confirm_availability_funds'),
@@ -579,6 +639,9 @@ def reject_requisition(request):
 def confirm_requisition(request, id):
     """
         This is the routing function used by the Accounting Officer to confirm the availbility of funds.
+
+        param: id 
+        param type: int
     """
     if request.method == "POST":
         if id:
@@ -601,7 +664,6 @@ def confirm_requisition(request, id):
             requisition.accepted = True
             confirmation.save()
             requisition.save()
-
             messages.success(request, f"Confirmation of requisition with subject of procurement {requisition.subject} was a success!.")
             return redirect("procurement:confirm_availability_funds")
 
