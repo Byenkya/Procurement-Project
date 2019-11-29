@@ -86,10 +86,14 @@
 								</a>
 			
 								<a href="{% url 'procurement:confirm_availability_funds' %}" class="list-group-item list-group-item-action px-2" style="border-radius: 0px;">
-									{% if req_count == 0 %}
+									{% if pending_count == 0 or req_count == 0 %}
 										Confirm Requisitions
 									{% else %}
-										Confirm Requisitions <span class="badge badge-light bg-danger text-white">{{ req_count }}</span>
+										{% if req_count %}
+											Confirm Requisitions <span class="badge badge-light bg-danger text-white">{{ req_count }}</span>
+										{% else %}
+											Confirm Requisitions <span class="badge badge-light bg-danger text-white">{{ pending_count }}</span>
+										{% endif %}
 									{% endif %}
 								</a>
 			

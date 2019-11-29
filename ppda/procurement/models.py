@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 import functools
 
-class HeadOfDepartment(models.Model):
+class HeadOfDepartment(models.Model):  
     first_name = models.CharField(max_length=15)
     last_name = models.CharField(max_length=15)
     title = models.CharField(max_length=30, default="")
@@ -94,7 +94,7 @@ class Requisition(models.Model):
     reference_number = models.CharField(max_length=15)
     financial_year = models.CharField(max_length=4)
     pde_code = models.CharField(max_length=10)
-    sequence_number = models.CharField(max_length=10,unique=True)
+    sequence_number = models.CharField(max_length=10, blank=True, default="")
     requisition_type = models.CharField(max_length=10)
     subject = models.CharField(max_length=10)
     plan_reference = models.CharField(max_length=10)
@@ -106,7 +106,6 @@ class Requisition(models.Model):
     member_confirmation_date = models.DateField(default=timezone.now)
     hod_confirmation_date = models.DateField(default=timezone.now)
     date_of_submission = models.DateField(null=True)
-    estimated_total_cost = models.IntegerField(default=0)
     ao_confirmation = models.BooleanField(blank=True,null=True)
     ao_confirmation_date = models.DateField(default=timezone.now)
     rejected = models.BooleanField(default=False)
@@ -137,9 +136,9 @@ class Requisition(models.Model):
 
 class Description(models.Model):
     id = models.AutoField(primary_key=True)
-    specification = models.CharField(max_length=500, blank=True, null=True)
-    terms_of_reference = models.FileField(upload_to="files/", null=True, blank=True)
-    scope_of_works = models.FileField(upload_to="files/", null=True, blank=True)
+    specification = models.CharField(max_length=500, blank=True)
+    terms_of_reference = models.FileField(upload_to="files/", blank=True)
+    scope_of_works = models.FileField(upload_to="files/", blank=True)
     
     def __str__(self):
         return self.specification
@@ -148,7 +147,7 @@ class Details(models.Model):
     id = models.AutoField(primary_key=True)
     item_name = models.CharField(max_length=10)
     quantity = models.IntegerField()
-    unit_of_measure = models.IntegerField()
+    unit_of_measure = models.CharField(max_length=20)
     estimated_cost = models.IntegerField()
     currency = models.CharField(max_length=10)
     market_price = models.IntegerField()
@@ -159,7 +158,7 @@ class Details(models.Model):
         return " ".join([
                 self.item_name,
                 str(self.quantity),
-                str(self.unit_of_measure),
+                self.unit_of_measure,
                 str(self.estimated_cost),
                 self.currency,
                 str(self.market_price)
@@ -190,39 +189,5 @@ class RequisitionStatus:
         self.requisitions = Requisition.objects.all()
 
     def __call__(self,*args,**kwargs):
-        return self.func(*args, *kwargs, self.get_all_requisitions())
+        return self.func(*args, *kwargs, self.requisitions)
 
-    def get_all_requisitions(self):
-        def wrapper():
-            for requisition in self.requisitions:
-                if (requisition.member_confirmation == False or 
-                    requisition.hod_confirmation == False or
-                    requisition.date_of_submission == None
-                    ):
-                    yield requisition
-            else:
-                print(requisition)   
-        return list(wrapper())
-
-class RequisitionApprovedCount:
-    def __init__(self, func):
-        functools.update_wrapper(self,func)
-        self.func = func
-        self.requisitions = Requisition.objects.all()
-
-    def __call__(self, *args, **kwargs):
-        return self.func(*args, *kwargs, self.get_req_to_be_confirmed_ao())
-
-    def get_req_to_be_confirmed_ao(self):
-        def wrapper():
-            for requisition in self.requisitions:
-                if (requisition.member_confirmation and 
-                    requisition.hod_confirmation and
-                    requisition.date_of_submission and
-                    requisition.accepted == False and 
-                    requisition.rejected == False
-                    ):
-                    yield requisition
-            else:
-                print(requisition)   
-        return list(wrapper())

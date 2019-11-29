@@ -2,7 +2,7 @@
 
 {% block content %}
 {% if code_of_pde %}
-	<form method="POST" action="{% url 'procurement:back_to_requisition_part1' %}">
+	<form method="POST" action="{% url 'procurement:back_to_requisition_part1' id=requisition_id %}">
 		{% csrf_token %}
 		<div class="container">
 			<div class="card-header p-2 m-1 text-center">
@@ -24,7 +24,7 @@
 				<div align="center" class="col-md-4">
 					<div>Sequence Number</div>
 					<div id="reference_number">
-						<input class="text-center" name="reference_number" type="text" value="{{ sequence_number }}" required readonly>
+						<input class="text-center" name="reference_number" type="text" value="" required readonly>
 					</div>
 				</div>
 			</div>
@@ -131,19 +131,19 @@
 				<div align="center" class="col-md-4">
 					<div>Code of PDE</div>
 					<div id="code_of_pde">
-						<input class="text-center" name="code_of_pde" type="text" placeholder="039" required>
+						<input class="text-center form-control" name="code_of_pde" type="text" placeholder="039" required>
 					</div>
 				</div>
 				<div align="center" class="col-md-4">
 					<div>Financial Year</div>
 						<div id="financial_year">
-						<input class="text-center" name="financial_year" type="text" placeholder="2019/2020" required>
+						<input class="text-center form-control" name="financial_year" type="text" placeholder="2019/2020" required>
 					</div>
 				</div>
 				<div align="center" class="col-md-4">
 					<div>Sequence Number</div>
 					<div id="reference_number">
-						<input class="text-center" name="reference_number" type="text" placeholder="P0001" required>
+						<input class="text-center form-control" name="reference_number" type="text" placeholder="P0001" required readonly>
 					</div>
 				</div>
 			</div>

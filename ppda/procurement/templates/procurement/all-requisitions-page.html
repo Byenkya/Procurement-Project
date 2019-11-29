@@ -9,8 +9,11 @@
         <a class="nav-item nav-link" id="nav-ao-tab" data-toggle="tab" href="#nav-ao" role="tab" aria-controls="nav-ao" aria-selected="false">
             Yet to be confirmed by Accounting Officer
         </a>
-        <a class="nav-item nav-link" id="nav-complete-tab" data-toggle="tab" href="#nav-complete" role="tab" aria-controls="nav-complete" aria-selected="false">
-            Complete
+        <a class="nav-item nav-link" id="nav-Confirmed-tab" data-toggle="tab" href="#nav-Confirmed" role="tab" aria-controls="nav-Confirmed" aria-selected="false">
+            Confirmed
+        </a>
+        <a class="nav-item nav-link" id="nav-rejected-tab" data-toggle="tab" href="#nav-rejected" role="tab" aria-controls="nav-rejected" aria-selected="false">
+            Rejected
         </a>
         </div>
     </nav>
@@ -84,7 +87,7 @@
                                             </button>
                                         </div>
                                         <!-- Modal -->
-                                        <div class="modal fade" id="requisition_details{{detail.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal fade mt-4" id="requisition_details{{detail.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -122,7 +125,11 @@
                                                             </tr>
                                                             <tr>
                                                                 <td style=" border: 1px solid black;" class="font-weight-bold">Terms of Reference</td>
-                                                                <td style=" border: 1px solid black;" colspan="5" class="m-2">&nbsp;{{detail.requisition_description_id.terms_of_reference}}</td>
+                                                                <td style=" border: 1px solid black;" colspan="5" class="m-2">
+                                                                    <a href="/media/{{detail.requisition_description_id.terms_of_reference}}" open  target="_blank" class="font-weight-bold">
+                                                                        Read File
+                                                                    </a> 
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td style=" border: 1px solid black;" class="font-weight-bold">Scope of works</td>
@@ -304,7 +311,7 @@
                                             </button>
                                         </div>
                                         <!-- Modal -->
-                                        <div class="modal fade" id="requisition_details{{detail.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal fade mt-4" id="requisition_details{{detail.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -338,11 +345,15 @@
                                                         </tr>
                                                         <tr>
                                                             <td style=" border: 1px solid black;" class="font-weight-bold">Specifications</td>
-                                                            <td style=" border: 1px solid black;" colspan="5" class="m-2">{{detail.requisition_description_id.specification}}</td>
+                                                            <td style=" border: 1px solid black;" colspan="5" class="m-2">
+                                                                {{detail.requisition_description_id.specification}}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td style=" border: 1px solid black;" class="font-weight-bold">Terms of Reference</td>
-                                                            <td style=" border: 1px solid black;" colspan="5" class="m-2">&nbsp;{{detail.requisition_description_id.terms_of_reference}}</td>
+                                                            <td style=" border: 1px solid black;" colspan="5" class="m-2">
+                                                                &nbsp;<a href="/media/{{detail.requisition_description_id.terms_of_reference}}" open target="_blank" class="font-weight-bold">Read File</a>
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td style=" border: 1px solid black;" class="font-weight-bold">Scope of works</td>
@@ -434,8 +445,11 @@
                 </script>
             {% endfor %}
         </div>
-        <div class="tab-pane fade" id="nav-complete" role="tabpanel" aria-labelledby="nav-complete-tab">
-            Complete
+        <div class="tab-pane fade" id="nav-Confirmed" role="tabpanel" aria-labelledby="nav-Confirmed-tab">
+            Confirmed
+        </div>
+        <div class="tab-pane fade" id="nav-rejected" role="tabpanel" aria-labelledby="nav-rejected-tab">
+            Rejected
         </div>
     </div>
 {% endblock %}

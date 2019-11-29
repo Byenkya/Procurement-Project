@@ -89,7 +89,7 @@
                                     more&nbsp;<span class="fa fa-plus"></span>
                                 </button>
                                 <!-- Modal -->
-                                <div class="modal fade" id="requisition_details{{detail.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade mt-4" id="requisition_details{{detail.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -127,7 +127,11 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="font-weight-bold">Terms of Reference</td>
-                                                        <td colspan="5" class="m-2">&nbsp;{{detail.requisition_description_id.terms_of_reference}}</td>
+                                                        <td colspan="5" class="m-2">
+                                                            &nbsp;<a href="/media/{{detail.requisition_description_id.terms_of_reference}}" open  target="_blank" class="font-weight-bold">
+                                                                    Read File
+                                                                  </a> 
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="font-weight-bold">Scope of works</td>
@@ -150,7 +154,7 @@
                     {% endfor %}         
                     <tr>
                         <td class="text-right font-weight-bold" colspan="5">Estimated Total Cost</td>
-                        <td>{{ requisition.estimated_total_cost }}</td>
+                        <td>{{ estimated_total_cost }}</td>
                     </tr> 
                 </tbody>
             </table>
@@ -284,7 +288,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="rejectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="font-family: 'Courier New', Courier, monospace;">
+    <div class="modal fade mt-4" id="rejectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="font-family: 'Courier New', Courier, monospace;">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
