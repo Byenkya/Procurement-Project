@@ -5,6 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 		<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+		<script src="{% static 'js/popper.min.js' %}"></script>
 		<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
 		<script src="{% static 'js/bootstrap.min.js' %}"></script>
 	</head>
@@ -14,15 +15,34 @@
 				<div class="col-md-3 my-auto p-0">
 					<img class="h-100" src="{% static 'img/logo.png' %}" align="center" alt="PPDA logo"/>
 				</div>
-				<div class="col-md-5 my-auto">
+				<div class="col-md-4 my-auto">
 					{% if user.profile.role == 'member' or user.profile.role == 'hod' %}
 						<strong>Department: {{ user.profile.member.user_department_id.department_name }}</strong>
 					{% elif user.profile.role == 'ao' %}
 						<strong>Office: {{ user.profile.office_member_id.office_id.name }}</strong>
 					{% endif %}
 				</div>
-				<div class="col-md-3 my-auto">
-					<strong>Username: {{ user.username }}</strong>&nbsp;&nbsp;<span class="fa fa-user"></span>
+				<div class="col-md-4 my-auto">
+					<div class="row">
+						<div class="col-md-8 mt-1">
+							<strong>Username: {{ user.username }}</strong>&nbsp;&nbsp;<span class="fa fa-user"></span>
+						</div>
+						<div class="col-md-4">
+							<div class="btn-group">
+								<button type="button" class="btn btn-info btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="fa fa-bell" style="color: white;"></i>
+									<span class="count font-weight-bold" style="font-family: 'Courier New', Courier, monospace;font-size: smaller;color: white;">5</span>
+								</button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="#">Action</a>
+									<a class="dropdown-item" href="#">Another action</a>
+									<a class="dropdown-item" href="#">Something else here</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="#">Separated link</a>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="col-md-1 my-auto">
 					<strong><a href="{% url 'logout' %}" style="color: white;text-decoration: none;">Logout</a></strong>
@@ -43,9 +63,6 @@
 								</a>
 								<a href="#" class="list-group-item list-group-item-action px-2" style="border-radius: 0px;">
 									Procurement Plan and Budget
-								</a>
-								<a href="{% url 'procurement:new_requisition' %}" class="list-group-item list-group-item-action px-2" style="border-radius: 0px;">
-									Make Procurement Requisition
 								</a>
 								<a href="#" class="list-group-item list-group-item-action px-2" style="border-radius: 0px;">
 									Contract management

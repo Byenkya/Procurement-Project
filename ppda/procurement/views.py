@@ -36,7 +36,8 @@ def pending(request,requisitions):
                         req.member_confirmation == False or 
                         req.hod_confirmation == False or
                         req.date_of_submission == None
-                    )
+                    ) and(request.user.profile.member.user_department_id.department_name == 
+                    req.user_department_id.department_name)
             ]
         return len(reqs)
     else:
@@ -244,9 +245,9 @@ def add_requisition_detail(request,id):
                 item = request.POST["item"]
                 specifications = request.POST["specifications"]
                 terms_of_reference = request.FILES["terms_of_reference"]
-                quantity = request.POST["quantity"]
+                quantity = int(request.POST["quantity"])
                 unit_of_measure = request.POST["unit-of-measure"]
-                estimated_cost = request.POST["estimated-cost"]
+                estimated_cost = int(request.POST["estimated-cost"])
                 market_price = request.POST["market-price"]
 
                 description = Description(
@@ -259,7 +260,7 @@ def add_requisition_detail(request,id):
                                 item_name = item,
                                 quantity = quantity,
                                 unit_of_measure = unit_of_measure,
-                                estimated_cost = estimated_cost,
+                                estimated_cost = estimated_cost*quantity,
                                 currency = currency,
                                 market_price = market_price,
                                 requisition_id = requisition,
@@ -267,7 +268,7 @@ def add_requisition_detail(request,id):
                             )
                 details.save()
 
-                all_details = Details.objects.all()
+                all_details = Details.objects.filter(requisition_id=id).all()
                 estimated_total_cost = [(detail.estimated_cost) for detail in all_details]
                 context = {
                     "requisition":requisition,
@@ -306,7 +307,7 @@ def add_requisition_detail(request,id):
                                 requisition_description_id = description
                             )
                 details.save()
-                all_details = Details.objects.all()
+                all_details = Details.objects.filter(requisition_id=id).all()
                 estimated_total_cost = [(detail.estimated_cost) for detail in all_details]
                 context = {
                     "requisition":requisition,
@@ -555,6 +556,8 @@ def delete_requisition(request, id):
     """
     if request.method == "GET":
         requisition = Requisition.objects.get(id=id)
+        details = Details.objects.filter(requisition_id=requisition.id).all()
+        details.delete()
         requisition.delete()
         messages.success(request,f"Requisition has been deleted successfully.")
         return redirect("procurement:view_requisitions")
@@ -578,7 +581,7 @@ def confirm_availability_funds(request):
                 requisition.rejected == False
                 ):
                     yet_to_be_confirmed.append(requisition)
-
+  
         if len(yet_to_be_confirmed) <= 0:
             messages.info(request,"Currently there are no requisitions to confirm.")
             context = {
